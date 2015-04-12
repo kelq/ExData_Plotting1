@@ -5,10 +5,10 @@
 # Include required libraries.
 library(data.table)
 
-# Set working directory.
+# Set YOUR working directory here.
 setwd("C:/Users/kelvinq/Documents/Coursera/04_EDA/Assignment1")
 
-# Read just the Date field to check where the required rows start and end.
+# Read just the Date field to check where the required rows start and end  (start of 1/2/2007 and right before 3/2/2007).
 # This takes advantage of the fact that the household data file is sorted by Date.
 temper<-fread("household_power_consumption.txt", select=1)
 startAt<-min(which(temper$Date=="1/2/2007"))
