@@ -1,0 +1,35 @@
+#####
+# EDA - Course Project 1
+#####
+
+# Include required libraries.
+library(data.table)
+
+# Set working directory.
+setwd("C:/Users/kelvinq/Documents/Coursera/04_EDA/Assignment1")
+
+# Read just the Date field to check where the required rows start and end.
+# This takes advantage of the fact that the household data file is sorted by Date.
+temper<-fread("household_power_consumption.txt", select=1)
+startAt<-min(which(temper$Date=="1/2/2007"))
+endAt<-min(which(temper$Date=='3/2/2007'))
+
+# Read file
+temper<-NULL
+temper<-fread("household_power_consumption.txt", sep=";", skip=startAt, nrows=(endAt-startAt), header=FALSE)
+
+# Somehow, fread function loses the column names when you use the skip clause.
+# To re-read file's column names, and assign to data frame.
+colNames<-names(read.table("household_power_consumption.txt", nrows=1, sep=";", header=TRUE))
+setnames(temper, colNames)
+
+###
+# Plot 3 - Plots of Sub Metering_n against Datetime on one plot.
+###
+temper$DT<-as.POSIXct(paste(temper$Date, temper$Time), format="%d/%m/%Y %H:%M:%S")
+png(file="plot3.png",width=480, height=480)
+with(temper, plot(type="l", y=Sub_metering_1, x=DT, ylab="Energy sub metering", xlab=""))
+with(temper, lines(y=Sub_metering_2, x=DT, col="red"))
+with(temper, lines(y=Sub_metering_3, x=DT, col="blue"))
+legend("topright" , lty=1, col = c("black","red","blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+dev.off()
